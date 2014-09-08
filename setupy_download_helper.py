@@ -9,6 +9,8 @@ import zipfile
 from tempfile import NamedTemporaryFile
 from setuptools.command.develop import develop
 from setuptools.command.install import install
+from setuptools.command.bdist_egg import bdist_egg
+
 from os.path import join
 import platform
 
@@ -57,7 +59,8 @@ def download_ziped_resource(path, url, name, unzip=False):
             zfile = zipfile.ZipFile(f.name)
             zfile.extractall(path)
             os.rename(os.path.join(path, zfile.namelist()[0]), full_path)
-    os.chmod(full_path, 755)
+    sys.stdout.write("chromedriver downloaded and can be reached by following path %s" % full_path)
+    os.chmod(full_path, 0o755)
 
 
 def data_loader(command_subclass):
@@ -68,8 +71,8 @@ def data_loader(command_subclass):
     orig_run = command_subclass.run
 
     def modified_run(self):
-        orig_run(self)
-        base_path = join(self.install_lib or here, 'chromedriver')
+        # base_dir = getattr(self, 'install_lib', None) or getattr(self, 'egg_output', None) or here
+        base_path = join(here, 'chromedriver')
         self.execute(
             download_ziped_resource,
             (base_path,
@@ -77,6 +80,8 @@ def data_loader(command_subclass):
              DEST_FILE_NAME,
              True),
             msg="Downloading %s" % DEST_FILE_NAME)
+        self.distribution.data_files = [join(base_path, DEST_FILE_NAME)]
+        orig_run(self)
     command_subclass.run = modified_run
     return command_subclass
 
@@ -88,4 +93,9 @@ class DevelopCommand(develop):
 
 @data_loader
 class InstallCommand(install):
+    pass
+
+
+@data_loader
+class BdistEggCommand(bdist_egg):
     pass

@@ -10,7 +10,6 @@ setupy_download_helper = imp.load_source(
 version = '2.10'
 setupy_download_helper.CHROMEDRIVER_VERSION = version
 
-
 setup(name='chromedriver',
       version=version,
       description="Tool for downloading chromedriver",
@@ -27,7 +26,7 @@ setup(name='chromedriver',
       zip_safe=False,
       cmdclass={
           'install': setupy_download_helper.InstallCommand,
-          'bdist_egg': setupy_download_helper.InstallCommand,
+          'bdist_egg': setupy_download_helper.BdistEggCommand,
           'develop': setupy_download_helper.DevelopCommand},
       install_requires=[
           # -*- Extra requirements: -*-
