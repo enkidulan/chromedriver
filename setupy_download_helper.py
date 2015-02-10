@@ -17,8 +17,14 @@ import platform
 here = os.path.dirname(os.path.abspath(__file__))
 
 CHROMEDRIVER_VERSION = '2.10'
-platform_version = '64' if platform.uname()[4] == 'x86_64' else '32'
-CHROMEDRIVER_URL_BASE = "http://chromedriver.storage.googleapis.com/%s/" + "chromedriver_linux%s.zip" % platform_version
+CHROMEDRIVER_URL_BASE = "http://chromedriver.storage.googleapis.com/%s/"
+if platform.system() == 'Linux':
+    platform_version = '64' if platform.uname()[4] == 'x86_64' else '32'
+    CHROMEDRIVER_URL_BASE += "chromedriver_linux%s.zip" % platform_version
+elif platform.system() == 'Windows':
+    CHROMEDRIVER_URL_BASE += "chromedriver_win32.zip"
+else:
+    raise RuntimeError('This package supports only Linux or Windows platforms')
 DEST_FILE_NAME = 'CHROMEDRIVER'
 
 
