@@ -7,7 +7,7 @@ setupy_download_helper_path = join(
 setupy_download_helper = imp.load_source(
     'setupy_download_helper', setupy_download_helper_path)
 
-version = '2.14.1'
+version = '2.16.4'
 setupy_download_helper.CHROMEDRIVER_VERSION = version[:4]
 
 setup(name='chromedriver',
@@ -31,6 +31,7 @@ setup(name='chromedriver',
       install_requires=[
           # -*- Extra requirements: -*-
       ],
+      package_data={'chromedriver': ['bin/chromedriver']},
       entry_points="""
       # -*- Entry points: -*-
       """,

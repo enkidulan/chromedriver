@@ -25,7 +25,7 @@ elif platform.system() == 'Windows':
     CHROMEDRIVER_URL_BASE += "chromedriver_win32.zip"
 else:
     raise RuntimeError('This package supports only Linux or Windows platforms')
-DEST_FILE_NAME = 'CHROMEDRIVER'
+DEST_FILE_NAME = 'chromedriver'
 
 
 class RequestProgressWrapper():
@@ -65,7 +65,7 @@ def download_ziped_resource(path, url, name, unzip=False):
             zfile = zipfile.ZipFile(f.name)
             zfile.extractall(path)
             os.rename(os.path.join(path, zfile.namelist()[0]), full_path)
-    sys.stdout.write("chromedriver downloaded and can be reached by following path %s" % full_path)
+    sys.stdout.write("chromedriver downloaded and can be reached by following path '%s'. " % full_path)
     os.chmod(full_path, 0o755)
 
 
@@ -78,7 +78,7 @@ def data_loader(command_subclass):
 
     def modified_run(self):
         # base_dir = getattr(self, 'install_lib', None) or getattr(self, 'egg_output', None) or here
-        base_path = join(here, 'chromedriver')
+        base_path = join(here, 'chromedriver', 'bin')
         self.execute(
             download_ziped_resource,
             (base_path,
