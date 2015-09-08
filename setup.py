@@ -7,7 +7,7 @@ setupy_download_helper_path = join(
 setupy_download_helper = imp.load_source(
     'setupy_download_helper', setupy_download_helper_path)
 
-version = '2.18'
+version = '2.19'
 setupy_download_helper.CHROMEDRIVER_VERSION = version[:4]
 
 setup(name='chromedriver',
