@@ -23,8 +23,10 @@ if platform.system() == 'Linux':
     CHROMEDRIVER_URL_BASE += "chromedriver_linux%s.zip" % platform_version
 elif platform.system() == 'Windows':
     CHROMEDRIVER_URL_BASE += "chromedriver_win32.zip"
+elif platform.system() == 'Darwin':
+    CHROMEDRIVER_URL_BASE += "chromedriver_mac32.zip"
 else:
-    raise RuntimeError('This package supports only Linux or Windows platforms')
+    raise RuntimeError('This package supports only Linux, MacOSX or Windows platforms')
 DEST_FILE_NAME = 'chromedriver'
 
 
