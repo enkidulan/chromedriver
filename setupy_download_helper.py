@@ -12,22 +12,18 @@ from setuptools.command.install import install
 from setuptools.command.bdist_egg import bdist_egg
 
 from os.path import join
-import platform
 
 here = os.path.dirname(os.path.abspath(__file__))
 
-CHROMEDRIVER_VERSION = '2.10'
+CHROMEDRIVER_VERSION = None  # replace it after to appropriate module import
 CHROMEDRIVER_URL_BASE = "http://chromedriver.storage.googleapis.com/%s/"
-if platform.system() == 'Linux':
-    platform_version = '64' if platform.uname()[4] == 'x86_64' else '32'
-    CHROMEDRIVER_URL_BASE += "chromedriver_linux%s.zip" % platform_version
-elif platform.system() == 'Windows':
-    CHROMEDRIVER_URL_BASE += "chromedriver_win32.zip"
-elif platform.system() == 'Darwin':
-    CHROMEDRIVER_URL_BASE += "chromedriver_mac32.zip"
-else:
-    raise RuntimeError('This package supports only Linux, MacOSX or Windows platforms')
-DEST_FILE_NAME = 'chromedriver'
+DOWNLOAD_LINKS = {
+    'Linux64': "chromedriver_linux64.zip",
+    'Linux32': "chromedriver_linux32.zip",
+    'Windows': "chromedriver_win32.zip",
+    'Darwin': "chromedriver_mac32.zip",
+}
+BASE_DEST_FILE_NAME = 'chromedriver'
 
 
 class RequestProgressWrapper():
@@ -80,16 +76,20 @@ def data_loader(command_subclass):
 
     def modified_run(self):
         # base_dir = getattr(self, 'install_lib', None) or getattr(self, 'egg_output', None) or here
-        base_path = join(here, 'chromedriver', 'bin')
-        self.execute(
-            download_ziped_resource,
-            (base_path,
-             CHROMEDRIVER_URL_BASE % CHROMEDRIVER_VERSION,
-             DEST_FILE_NAME,
-             True),
-            msg="Downloading %s" % DEST_FILE_NAME)
-        self.distribution.data_files = [join(base_path, DEST_FILE_NAME)]
+        binaries_loaction = join(here, 'chromedriver', 'bin')
+        self.distribution.data_files = self.distribution.data_files or []
+        for platform, link_platform in DOWNLOAD_LINKS.items():
+            dest_file_name = '-'.join((BASE_DEST_FILE_NAME, platform))
+            self.execute(
+                download_ziped_resource,
+                (binaries_loaction,
+                 (CHROMEDRIVER_URL_BASE % CHROMEDRIVER_VERSION) + link_platform,
+                 dest_file_name,
+                 True),
+                msg="Downloading %s" % dest_file_name)
+            self.distribution.data_files.append(join(binaries_loaction, dest_file_name))
         orig_run(self)
+
     command_subclass.run = modified_run
     return command_subclass
 
