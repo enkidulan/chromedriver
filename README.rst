@@ -13,4 +13,4 @@ To use it just add chromedriver into your install_requires and than where you ne
 
     This package may containe bugs and works only under linux.
 
-Also on import this package patches system PATH to have directory with 'chromedriver'.
+*On import time package patches system PATH to have directory with 'chromedriver'.*
