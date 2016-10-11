@@ -21,7 +21,7 @@ DOWNLOAD_LINKS = {
     'Linux64': "chromedriver_linux64.zip",
     'Linux32': "chromedriver_linux32.zip",
     'Windows': "chromedriver_win32.zip",
-    'Darwin': "chromedriver_mac32.zip",
+    'Darwin': "chromedriver_mac%s.zip",
 }
 BASE_DEST_FILE_NAME = 'chromedriver'
 
@@ -79,11 +79,15 @@ def data_loader(command_subclass):
         binaries_loaction = join(here, 'chromedriver', 'bin')
         self.distribution.data_files = self.distribution.data_files or []
         for platform, link_platform in DOWNLOAD_LINKS.items():
+            if platform == 'Darwin':
+                link_platform = link_platform % ('64' if CHROMEDRIVER_VERSION >= '2.23' else '32')
+            url = (CHROMEDRIVER_URL_BASE % CHROMEDRIVER_VERSION) + link_platform
+            sys.stdout.write("Target link: %s;   " % url)
             dest_file_name = '-'.join((BASE_DEST_FILE_NAME, platform))
             self.execute(
                 download_ziped_resource,
                 (binaries_loaction,
-                 (CHROMEDRIVER_URL_BASE % CHROMEDRIVER_VERSION) + link_platform,
+                 url,
                  dest_file_name,
                  True),
                 msg="Downloading %s" % dest_file_name)
