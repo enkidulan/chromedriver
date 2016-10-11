@@ -1,1 +1,6 @@
-include chromedriver/bin/*
+include chromedriver/bin
+include chromedriver/bin/chromedriver-Darwin
+include chromedriver/bin/chromedriver-Linux32
+include chromedriver/bin/chromedriver-Linux64
+include chromedriver/bin/chromedriver-Windows
+exclude setupy_download_helper.py
